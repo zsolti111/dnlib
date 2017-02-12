@@ -81,7 +81,7 @@ namespace dnlib.Examples {
 			}
 
 			public RVA RVA {
-				get { return rva; }
+				get {  return rva; }
 			}
 
 			public void SetOffset(FileOffset offset, RVA rva) {
