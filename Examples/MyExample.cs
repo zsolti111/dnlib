@@ -1,4 +1,5 @@
 ﻿using dnlib.DotNet;
+using dnlib.DotNet.Emit;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,13 +16,38 @@ namespace dnlib.Examples
             string filename = "C:\\Users\\Zsolti\\Desktop\\önlab\\MyClassLibrary\\MyClassLibrary\\MyClassLibrary\\bin\\Debug\\MyClassLibrary.dll";
             ModuleDefMD mod = ModuleDefMD.Load(filename);
 
+
             int totalNumTypes = 0;
+
+
+            if (mod.GetManagedEntryPoint() == null)
+                Console.WriteLine(" Managed entry point is NULL! ");
+
+            var moduleRefs = mod.GetModuleRefs();
+
+            if (moduleRefs == null)
+                Console.WriteLine(" Module Refs is NULL!");
+
+            else
+            {
+                foreach (var item in moduleRefs)
+                {
+                    Console.WriteLine(item.Module);
+
+                }
+            }
+
+            Thread.Sleep(1500);
+            Console.WriteLine(" Let's start check the types ");
+
             // mod.Types only returns non-nested types.
             // mod.GetTypes() returns all types, including nested types.
             foreach (TypeDef type in mod.GetTypes())
             {
 
                 Thread.Sleep(2000);
+
+                ////// TYPE //////
 
                 totalNumTypes++;
                 Console.WriteLine();
@@ -34,6 +60,9 @@ namespace dnlib.Examples
                 Console.WriteLine("  Properties: {0}", type.Properties.Count);
                 Console.WriteLine("  Events: {0}", type.Events.Count);
                 Console.WriteLine("  Nested types: {0}", type.NestedTypes.Count);
+                Console.WriteLine("  Visibility: {0}", type.Visibility);
+                Console.WriteLine("  TypeOrMethodDefTag: {0}", type.TypeOrMethodDefTag);
+
 
                 if (type.Interfaces.Count > 0)
                 {
@@ -41,6 +70,12 @@ namespace dnlib.Examples
                     foreach (InterfaceImpl iface in type.Interfaces)
                         Console.WriteLine("    {0}", iface.Interface.FullName);
                 }
+
+
+
+
+
+
             }
             Console.WriteLine();
             Console.WriteLine("Total number of types: {0}", totalNumTypes);
