@@ -37,7 +37,7 @@ namespace dnlib.Examples
                 }
             }
 
-            Thread.Sleep(1500);
+            Thread.Sleep(1000);
             Console.WriteLine(" Let's start check the types ");
 
             // mod.Types only returns non-nested types.
@@ -75,29 +75,37 @@ namespace dnlib.Examples
                 Thread.Sleep(1000);
 
                 Console.WriteLine("Methods inside a Type");
-                Console.WriteLine("*************************************");
+                Console.WriteLine("-------------------------------------");
 
                 //// Type-on belül methodok ////
 
                 foreach (var method in type.Methods)
                 {
+                    Console.WriteLine();
                     Console.WriteLine("Method Name: {0}", method.Name);
                     //Console.WriteLine("Method Parameters: {0}", method.Parameters);
 
                     ControlFlowGraph graph = ControlFlowGraph.Construct(method.Body);
 
-                    Console.WriteLine();
                     Console.WriteLine("HERE IS MY GRAPH: ");
                     Console.WriteLine("==============================");
                     Console.WriteLine("Count (Numbers of blocks in CFG)) : {0}", graph.Count);
                     Console.WriteLine("==============================");
-                    var gra = graph.Count;
                     Console.WriteLine();
+                    Console.WriteLine();
+
                 }
 
 
 
                 Console.WriteLine("-------------------------------------");
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
+                Console.WriteLine();
 
 
             }
