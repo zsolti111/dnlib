@@ -45,7 +45,7 @@ namespace dnlib.Examples
             foreach (TypeDef type in mod.GetTypes())
             {
 
-                Thread.Sleep(2000);
+                Thread.Sleep(1000);
 
                 ////// TYPE //////
 
@@ -71,9 +71,33 @@ namespace dnlib.Examples
                         Console.WriteLine("    {0}", iface.Interface.FullName);
                 }
 
+                Console.WriteLine();
+                Thread.Sleep(1000);
+
+                Console.WriteLine("Methods inside a Type");
+                Console.WriteLine("*************************************");
+
+                //// Type-on belül methodok ////
+
+                foreach (var method in type.Methods)
+                {
+                    Console.WriteLine("Method Name: {0}", method.Name);
+                    //Console.WriteLine("Method Parameters: {0}", method.Parameters);
+
+                    ControlFlowGraph graph = ControlFlowGraph.Construct(method.Body);
+
+                    Console.WriteLine();
+                    Console.WriteLine("HERE IS MY GRAPH: ");
+                    Console.WriteLine("==============================");
+                    Console.WriteLine("Count (Numbers of blocks in CFG)) : {0}", graph.Count);
+                    Console.WriteLine("==============================");
+                    var gra = graph.Count;
+                    Console.WriteLine();
+                }
 
 
 
+                Console.WriteLine("-------------------------------------");
 
 
             }
