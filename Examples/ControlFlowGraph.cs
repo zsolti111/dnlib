@@ -75,6 +75,18 @@ namespace dnlib.Examples
             return blocks[instrBlocks[instrIndex]];
         }
 
+
+        public List<ControlFlowBlock> GetAllBlocks ()
+        {
+            return blocks;
+        }
+
+
+
+
+
+
+
         /// <summary>
         ///     Gets the index of the specified instruction.
         /// </summary>
