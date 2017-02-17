@@ -90,7 +90,11 @@ namespace dnlib.Examples
                     Console.WriteLine("HERE IS MY GRAPH: ");
                     Console.WriteLine("==============================");
                     Console.WriteLine("Count (Numbers of blocks in CFG)) : {0}", graph.Count);
-                    
+                    Console.WriteLine("Instructions:");
+                    foreach (var block in graph.GetAllBlocks())
+                    {
+                        Console.WriteLine("instr: {0}", block.ToString());
+                    }
                     Console.WriteLine("==============================");
                     Console.WriteLine();
                     Console.WriteLine();
