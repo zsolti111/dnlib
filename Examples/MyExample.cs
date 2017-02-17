@@ -93,7 +93,19 @@ namespace dnlib.Examples
                     Console.WriteLine("Instructions:");
                     foreach (var block in graph.GetAllBlocks())
                     {
-                        Console.WriteLine("instr: {0}", block.ToString());
+                        Console.WriteLine("instr: {0}", block.Id);
+                        foreach (var item in block.Sources)
+                        {
+                            Console.WriteLine("Source: " + item.Id);
+
+
+                        }
+
+                        foreach (var item in block.Targets)
+                        {
+                            Console.WriteLine("Target: " + item.Id);
+                        }
+
                     }
                     Console.WriteLine("==============================");
                     Console.WriteLine();
