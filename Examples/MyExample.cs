@@ -13,6 +13,10 @@ namespace dnlib.Examples
     {
         public static void Run ()
         {
+
+            /* Saját dll-t készítettem, a filename a path és egy ModuleDefMD típusú objektumba ezt betöltöm
+             *  */
+
             string filename = "C:\\Users\\Zsolti\\Desktop\\önlab\\MyClassLibrary\\MyClassLibrary\\MyClassLibrary\\bin\\Debug\\MyClassLibrary.dll";
             ModuleDefMD mod = ModuleDefMD.Load(filename);
 
