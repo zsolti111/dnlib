@@ -14,8 +14,7 @@ namespace dnlib.Examples
         public static void Run ()
         {
 
-            /* Saját dll-t készítettem, a filename a path és egy ModuleDefMD típusú objektumba ezt betöltöm
-             *  */
+            /* Saját dll-t készítettem, a filename a path és egy ModuleDefMD típusú objektumba ezt betöltöm*/
 
             string filename = "C:\\Users\\Zsolti\\Desktop\\önlab\\MyClassLibrary\\MyClassLibrary\\MyClassLibrary\\bin\\Debug\\MyClassLibrary.dll";
             ModuleDefMD mod = ModuleDefMD.Load(filename);
@@ -23,37 +22,32 @@ namespace dnlib.Examples
 
             int totalNumTypes = 0;
 
+            /* Kiírjuk a betöltött assembly nevét */
+            Console.WriteLine(mod.Assembly.FullName);
+            for (int i = 0; i < 5; i++)
+            {
+                Console.WriteLine();
+            }
+            Thread.Sleep(1000);
+
 
             if (mod.GetManagedEntryPoint() == null)
                 Console.WriteLine(" Managed entry point is NULL! ");
 
-            var moduleRefs = mod.GetModuleRefs();
-
-            if (moduleRefs == null)
-                Console.WriteLine(" Module Refs is NULL!");
-
-            else
-            {
-                foreach (var item in moduleRefs)
-                {
-                    Console.WriteLine(item.Module);
-
-                }
-            }
-
-            Thread.Sleep(1000);
-            Console.WriteLine(" Let's start check the types ");
 
             // mod.Types only returns non-nested types.
             // mod.GetTypes() returns all types, including nested types.
             foreach (TypeDef type in mod.GetTypes())
             {
-
-                Thread.Sleep(1000);
-
-                ////// TYPE //////
-
                 totalNumTypes++;
+
+                for (int i = 0; i < 5; i++)
+                {
+                    Console.WriteLine("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
+                }
+
+
+                ////// TYPE //////  
                 Console.WriteLine();
                 Console.WriteLine("Type: {0}", type.FullName);
                 if (type.BaseType != null)
@@ -76,9 +70,7 @@ namespace dnlib.Examples
                 }
 
                 Console.WriteLine();
-                Thread.Sleep(1000);
-
-                Console.WriteLine("Methods inside a Type");
+                Console.WriteLine(" METHODS IN A TYPE / CLASS ");
                 Console.WriteLine("-------------------------------------");
 
                 //// Type-on belül methodok ////
@@ -89,46 +81,48 @@ namespace dnlib.Examples
                     Console.WriteLine("Method Name: {0}", method.Name);
                     //Console.WriteLine("Method Parameters: {0}", method.Parameters);
 
+                    // A függvényből megcsináljuk a CFG-t
                     ControlFlowGraph graph = ControlFlowGraph.Construct(method.Body);
 
-                    Console.WriteLine("HERE IS MY GRAPH: ");
                     Console.WriteLine("==============================");
+                    // Blokkok száma a CFG-ben
                     Console.WriteLine("Count (Numbers of blocks in CFG)) : {0}", graph.Count);
                     Console.WriteLine("Instructions:");
+
                     foreach (var block in graph.GetAllBlocks())
                     {
+                        // Az adott instrukció ID-ja
                         Console.WriteLine("instr: {0}", block.Id);
-                        foreach (var item in block.Sources)
+
+                        // Az adott blokk forrás blokkja
+                        foreach (var source in block.Sources)
                         {
-                            Console.WriteLine("Source: " + item.Id);
-
-
+                            Console.WriteLine("Source: " + source.Id);
                         }
 
-                        foreach (var item in block.Targets)
+                        // Az adott blokk cél blokkja
+                        foreach (var target in block.Targets)
                         {
-                            Console.WriteLine("Target: " + item.Id);
+                            Console.WriteLine("Target: " + target.Id);
                         }
+
+                        //Console.WriteLine("Footer: {0}", block.Footer.ToString());
+                        //Console.WriteLine("Header: {0}", block.Header.ToString());
+
+                        Console.WriteLine();
 
                     }
+
                     Console.WriteLine("==============================");
-                    Console.WriteLine();
-                    Console.WriteLine();
 
                 }
 
 
+            }
 
-                Console.WriteLine("-------------------------------------");
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-                Console.WriteLine();
-
-
+            for (int i = 0; i < 5; i++)
+            {
+                Console.WriteLine("xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx");
             }
             Console.WriteLine();
             Console.WriteLine("Total number of types: {0}", totalNumTypes);
