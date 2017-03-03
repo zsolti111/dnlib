@@ -19,7 +19,9 @@ namespace dnlib.Examples
             //string filename = "C:\\Users\\Zsolti\\Desktop\\önlab\\MyClassLibrary\\MyClassLibrary\\MyClassLibrary\\bin\\Debug\\MyClassLibrary.dll";
 
             /* Algorithms vizsgálata */
-            string filename = @"C:\Users\Zsolti\Desktop\C-Sharp-Algorithms-master\C-Sharp-Algorithms-master\Algorithms\bin\Debug\Algorithms.dll";
+            //string filename = @"C:\Users\Zsolti\Desktop\C-Sharp-Algorithms-master\C-Sharp-Algorithms-master\Algorithms\bin\Debug\Algorithms.dll";
+            /* DataStructures vizsgálata */
+            string filename = @"C:\Users\Zsolti\Desktop\C-Sharp-Algorithms-master\C-Sharp-Algorithms-master\DataStructures\bin\Debug\DataStrcutres.dll";
             ModuleDefMD mod = ModuleDefMD.Load(filename);
 
 
@@ -36,6 +38,9 @@ namespace dnlib.Examples
 
             if (mod.GetManagedEntryPoint() == null)
                 Console.WriteLine(" Managed entry point is NULL! ");
+
+
+
 
 
             // mod.Types only returns non-nested types.

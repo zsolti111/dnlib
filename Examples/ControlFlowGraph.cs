@@ -18,13 +18,22 @@ namespace dnlib.Examples
 
         ControlFlowGraph ( CilBody body )
         {
-            this.body = body;
-            instrBlocks = new int[body.Instructions.Count];
-            blocks = new List<ControlFlowBlock>();
+            try
+            {
+                this.body = body;
+                instrBlocks = new int[body.Instructions.Count];
+                blocks = new List<ControlFlowBlock>();
 
-            indexMap = new Dictionary<Instruction, int>();
-            for (int i = 0; i < body.Instructions.Count; i++)
-                indexMap.Add(body.Instructions[i], i);
+                indexMap = new Dictionary<Instruction, int>();
+                for (int i = 0; i < body.Instructions.Count; i++)
+                    indexMap.Add(body.Instructions[i], i);
+            }
+
+            catch
+            {
+                Console.WriteLine(" EXCCCCC ");
+            }
+
         }
 
         /// <summary>
@@ -33,7 +42,10 @@ namespace dnlib.Examples
         /// <value>The number of blocks.</value>
         public int Count
         {
-            get { return blocks.Count; }
+            get
+            {
+                return blocks.Count;
+            }
         }
 
         /// <summary>
@@ -43,7 +55,10 @@ namespace dnlib.Examples
         /// <returns>The block with specified id.</returns>
         public ControlFlowBlock this[int id]
         {
-            get { return blocks[id]; }
+            get
+            {
+                return blocks[id];
+            }
         }
 
         /// <summary>
@@ -52,7 +67,10 @@ namespace dnlib.Examples
         /// <value>The method body.</value>
         public CilBody Body
         {
-            get { return body; }
+            get
+            {
+                return body;
+            }
         }
 
         IEnumerator<ControlFlowBlock> IEnumerable<ControlFlowBlock>.GetEnumerator ()
@@ -116,7 +134,7 @@ namespace dnlib.Examples
                     if (i + 1 < body.Instructions.Count)
                         blockHeaders.Add(body.Instructions[i + 1]);
                 }
-                else if ((instr.OpCode.FlowControl == FlowControl.Throw || instr.OpCode.FlowControl == FlowControl.Return) &&
+                else if (( instr.OpCode.FlowControl == FlowControl.Throw || instr.OpCode.FlowControl == FlowControl.Return ) &&
                          i + 1 < body.Instructions.Count)
                 {
                     blockHeaders.Add(body.Instructions[i + 1]);
@@ -219,22 +237,33 @@ namespace dnlib.Examples
         /// <returns>The CFG of the given method body.</returns>
         public static ControlFlowGraph Construct ( CilBody body )
         {
-            var graph = new ControlFlowGraph(body);
-            if (body.Instructions.Count == 0)
+            try
+            {
+                var graph = new ControlFlowGraph(body);
+                if (body.Instructions.Count == 0)
+                    return graph;
+
+                // Populate block headers
+                var blockHeaders = new HashSet<Instruction>();
+                var entryHeaders = new HashSet<Instruction>();
+                graph.PopulateBlockHeaders(blockHeaders, entryHeaders);
+
+                // Split blocks
+                graph.SplitBlocks(blockHeaders, entryHeaders);
+
+                // Link blocks
+                graph.LinkBlocks();
+
                 return graph;
+            }
+            catch (Exception)
+            {
 
-            // Populate block headers
-            var blockHeaders = new HashSet<Instruction>();
-            var entryHeaders = new HashSet<Instruction>();
-            graph.PopulateBlockHeaders(blockHeaders, entryHeaders);
+                Console.WriteLine(" EXCEPTION ");
+                return new ControlFlowGraph(new CilBody());
+            }
 
-            // Split blocks
-            graph.SplitBlocks(blockHeaders, entryHeaders);
 
-            // Link blocks
-            graph.LinkBlocks();
-
-            return graph;
         }
     }
 
@@ -300,13 +329,19 @@ namespace dnlib.Examples
         ///     Gets the source blocks of this control flow block.
         /// </summary>
         /// <value>The source blocks.</value>
-        public IList<ControlFlowBlock> Sources { get; private set; }
+        public IList<ControlFlowBlock> Sources
+        {
+            get; private set;
+        }
 
         /// <summary>
         ///     Gets the target blocks of this control flow block.
         /// </summary>
         /// <value>The target blocks.</value>
-        public IList<ControlFlowBlock> Targets { get; private set; }
+        public IList<ControlFlowBlock> Targets
+        {
+            get; private set;
+        }
 
         /// <summary>
         ///     Returns a <see cref="System.String" /> that represents this block.
