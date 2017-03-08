@@ -11,8 +11,7 @@ namespace dnlib.Examples
 {
     public class MyExample
     {
-        public static List<int> sourceList = new List<int>();
-        public static List<int> TargetList = new List<int>();
+
 
         public static Dictionary<int, Dictionary<List<int>, List<int>>> blockList = new Dictionary<int, Dictionary<List<int>, List<int>>>();
 
@@ -64,8 +63,8 @@ namespace dnlib.Examples
                         {
                             // Az adott instrukció ID-ja
                             Console.WriteLine("instr: {0}", block.Id);
-                            sourceList.Clear();
-                            TargetList.Clear();
+                            var sourceList = new List<int>();
+                            var targetList = new List<int>();
 
 
                             // Az adott blokk forrás blokkja
@@ -79,7 +78,7 @@ namespace dnlib.Examples
                             foreach (var target in block.Targets)
                             {
                                 Console.WriteLine("Target: " + target.Id);
-                                TargetList.Add(target.Id);
+                                targetList.Add(target.Id);
                             }
 
                             //Console.WriteLine("Footer: {0}", block.Footer.ToString());
@@ -88,7 +87,7 @@ namespace dnlib.Examples
                             Console.WriteLine();
 
                             var tempDictionary = new Dictionary<List<int>, List<int>>();
-                            tempDictionary.Add(sourceList, TargetList);
+                            tempDictionary.Add(sourceList, targetList);
                             blockList.Add(block.Id, tempDictionary);
 
                         }
@@ -110,19 +109,19 @@ namespace dnlib.Examples
                 foreach (var dictionaryItem in blockListItem.Value)
                 {
                     Console.WriteLine("Source: ");
-
                     foreach (var source in dictionaryItem.Key)
                     {
                         Console.WriteLine(source);
                     }
 
-                    //foreach (var item2 in item3.Value)
-                    //{
-                    //    Console.WriteLine("Target: " + item2);
-                    //}
+                    Console.WriteLine("Target: ");
+                    foreach (var target in dictionaryItem.Value)
+                    {
+                        Console.WriteLine(target);
+                    }
                 }
 
-
+                Console.WriteLine();
             }
 
         }
