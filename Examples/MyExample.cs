@@ -11,6 +11,12 @@ namespace dnlib.Examples
 {
     public class MyExample
     {
+        public static List<int> sourceList = new List<int>();
+        public static List<int> TargetList = new List<int>();
+
+        public static Dictionary<int, Dictionary<List<int>, List<int>>> blockList = new Dictionary<int, Dictionary<List<int>, List<int>>>();
+
+
         public static void Run ()
         {
 
@@ -23,23 +29,11 @@ namespace dnlib.Examples
             /* DataStructures vizsgálata */
             //string filename = @"C:\Users\Zsolti\Desktop\C-Sharp-Algorithms-master\C-Sharp-Algorithms-master\DataStructures\bin\Debug\DataStrcutres.dll";
 
-
             ModuleDefMD mod = ModuleDefMD.Load(filename);
 
 
-            int totalNumTypes = 0;
-
-            /* Kiírjuk a betöltött assembly nevét */
-            Console.WriteLine(mod.Assembly.FullName);
-            for (int i = 0; i < 2; i++)
-            {
-                Console.WriteLine();
-            }
-            Thread.Sleep(1000);
 
 
-            // mod.Types only returns non-nested types.
-            // mod.GetTypes() returns all types, including nested types.
             foreach (TypeDef type in mod.GetTypes())
             {
 
@@ -70,17 +64,22 @@ namespace dnlib.Examples
                         {
                             // Az adott instrukció ID-ja
                             Console.WriteLine("instr: {0}", block.Id);
+                            sourceList.Clear();
+                            TargetList.Clear();
+
 
                             // Az adott blokk forrás blokkja
                             foreach (var source in block.Sources)
                             {
                                 Console.WriteLine("Source: " + source.Id);
+                                sourceList.Add(source.Id);
                             }
 
                             // Az adott blokk cél blokkja
                             foreach (var target in block.Targets)
                             {
                                 Console.WriteLine("Target: " + target.Id);
+                                TargetList.Add(target.Id);
                             }
 
                             //Console.WriteLine("Footer: {0}", block.Footer.ToString());
@@ -88,7 +87,13 @@ namespace dnlib.Examples
 
                             Console.WriteLine();
 
+                            var tempDictionary = new Dictionary<List<int>, List<int>>();
+                            tempDictionary.Add(sourceList, TargetList);
+                            blockList.Add(block.Id, tempDictionary);
+
                         }
+
+
 
                         Console.WriteLine("==============================");
                     }
@@ -98,6 +103,27 @@ namespace dnlib.Examples
 
             }
 
+            foreach (var blockListItem in blockList)
+            {
+                Console.WriteLine("ID:" + blockListItem.Key);
+
+                foreach (var dictionaryItem in blockListItem.Value)
+                {
+                    Console.WriteLine("Source: ");
+
+                    foreach (var source in dictionaryItem.Key)
+                    {
+                        Console.WriteLine(source);
+                    }
+
+                    //foreach (var item2 in item3.Value)
+                    //{
+                    //    Console.WriteLine("Target: " + item2);
+                    //}
+                }
+
+
+            }
 
         }
     }
