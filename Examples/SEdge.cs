@@ -5,16 +5,16 @@ using System.ComponentModel;
 
 namespace SEViz.Common.Model
 {
-    public class SEEdge : Edge<SENode>
+    public class SEEdge
     {
 
         public int Id
         {
-            get; private set;
+            get; set;
         }
 
 
-        public SEEdge ( int id, SENode source, SENode target ) : base(source, target)
+        public SEEdge ( int id, SENode source, SENode target )
         {
             Id = id;
         }

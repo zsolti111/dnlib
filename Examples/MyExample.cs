@@ -12,7 +12,8 @@ namespace dnlib.Examples
     public class MyExample
     {
 
-
+        // Key: ID
+        // Value : [1] Source-k [2] Target-ek
         public static Dictionary<int, Dictionary<List<int>, List<int>>> blockList = new Dictionary<int, Dictionary<List<int>, List<int>>>();
 
 
@@ -102,27 +103,27 @@ namespace dnlib.Examples
 
             }
 
-            foreach (var blockListItem in blockList)
-            {
-                Console.WriteLine("ID:" + blockListItem.Key);
+            //////foreach (var blockListItem in blockList)
+            //////{
+            //////    Console.WriteLine("ID:" + blockListItem.Key);
 
-                foreach (var dictionaryItem in blockListItem.Value)
-                {
-                    Console.WriteLine("Source: ");
-                    foreach (var source in dictionaryItem.Key)
-                    {
-                        Console.WriteLine(source);
-                    }
+            //////    foreach (var dictionaryItem in blockListItem.Value)
+            //////    {
+            //////        Console.WriteLine("Source: ");
+            //////        foreach (var source in dictionaryItem.Key)
+            //////        {
+            //////            Console.WriteLine(source);
+            //////        }
 
-                    Console.WriteLine("Target: ");
-                    foreach (var target in dictionaryItem.Value)
-                    {
-                        Console.WriteLine(target);
-                    }
-                }
+            //////        Console.WriteLine("Target: ");
+            //////        foreach (var target in dictionaryItem.Value)
+            //////        {
+            //////            Console.WriteLine(target);
+            //////        }
+            //////    }
 
-                Console.WriteLine();
-            }
+            //////    Console.WriteLine();
+            //////}
 
         }
     }
