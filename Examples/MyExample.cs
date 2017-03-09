@@ -15,7 +15,9 @@ namespace dnlib.Examples
 
         // Key: ID
         // Value : [1] Source-k [2] Target-ek
-        public static Dictionary<int, Dictionary<List<int>, List<int>>> blockList = new Dictionary<int, Dictionary<List<int>, List<int>>>();
+        // public static Dictionary<int, Dictionary<List<int>, List<int>>> blockList = new Dictionary<int, Dictionary<List<int>, List<int>>>();
+
+
         public static List<SENode> blocks = new List<SENode>();
         public static BidirectionalGraph<SENode, SEdge> graph = new BidirectionalGraph<SENode, SEdge>();
 
@@ -60,9 +62,6 @@ namespace dnlib.Examples
                         ControlFlowGraph graph = ControlFlowGraph.Construct(method.Body);
 
                         Console.WriteLine("==============================");
-                        // Blokkok száma a CFG-ben
-                        Console.WriteLine("Count (Numbers of blocks in CFG)) : {0}", graph.Count);
-                        Console.WriteLine("Instructions:");
 
                         foreach (var block in graph.GetAllBlocks())
                         {
@@ -74,13 +73,6 @@ namespace dnlib.Examples
                             var targetList = new List<int>();
                             var targetListNodes = new List<SENode>();
 
-                            if (block.Sources.Count == 0)
-                            {
-                                if (block.Targets.Count == 0)
-                                {
-
-                                }
-                            }
 
                             // Az adott blokk forrás blokkja
 
@@ -109,7 +101,7 @@ namespace dnlib.Examples
 
                             var tempDictionary = new Dictionary<List<int>, List<int>>();
                             tempDictionary.Add(sourceList, targetList);
-                            blockList.Add(block.Id, tempDictionary);
+                            ////////////////blockList.Add(block.Id, tempDictionary);
 
                             var tempSENode = new SENode(block.Id, sourceListNodes, targetListNodes);
                             blocks.Add(tempSENode);
@@ -130,7 +122,24 @@ namespace dnlib.Examples
             foreach (var item in blocks)
             {
 
-                Console.WriteLine("ID: " + item.Id);
+                //if (item.Source.Count == 0)
+                //{
+                //    var tempEdge = new SEdge(item.Id, item., item.Target);
+                //    graph.AddEdge(tempEdge);
+
+                //}
+
+                //if (item.Target.Count == 0)
+                //{
+                //    var tempEdge = new SEdge(item.Id, null, item.Target);
+                //    graph.AddEdge(tempEdge);
+
+                //}
+
+                graph.AddVertex(item);
+
+
+                Console.WriteLine("ID: " + "\n" + item.Id);
 
 
                 Console.WriteLine("SOURCES: ");
@@ -145,7 +154,18 @@ namespace dnlib.Examples
                     Console.WriteLine(item2.Id);
                 }
                 Console.WriteLine();
+                Console.WriteLine("----------------------------");
             }
+
+
+            for (int i = 0; i < 5; i++)
+            {
+                Console.WriteLine();
+            }
+
+            Console.WriteLine("----GRAPH----");
+
+            Console.WriteLine(graph.VertexCount);
 
             //////foreach (var blockListItem in blockList)
             //////{

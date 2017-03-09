@@ -1,5 +1,6 @@
 ﻿using QuickGraph;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 
 
@@ -13,11 +14,22 @@ namespace dnlib.Examples
             get; set;
         }
 
+        public List<SENode> Sources
+        {
+            get; set;
+        }
+
+        public List<SENode> Targets
+        {
+            get; set;
+        }
+
         public SENode Source
         {
             get
             {
-                throw new NotImplementedException();
+
+                return null;
             }
         }
 
@@ -26,6 +38,7 @@ namespace dnlib.Examples
             get
             {
                 throw new NotImplementedException();
+
             }
         }
 
@@ -34,10 +47,12 @@ namespace dnlib.Examples
             Id = id;
         }
 
-        public static SEdge Factory ( SENode source, SENode target, string id )
+        public SEdge ( int id, List<SENode> sources, List<SENode> targets )
         {
-            return new SEdge(Int32.Parse(id), source, target);
+            Sources = sources;
+            Targets = targets;
         }
+
 
     }
 
