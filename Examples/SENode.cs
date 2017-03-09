@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 
 
-namespace SEViz.Common.Model
+namespace dnlib.Examples
 {
     public class SENode
     {

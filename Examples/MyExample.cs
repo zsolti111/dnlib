@@ -1,5 +1,6 @@
 ﻿using dnlib.DotNet;
 using dnlib.DotNet.Emit;
+using QuickGraph;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,6 +16,8 @@ namespace dnlib.Examples
         // Key: ID
         // Value : [1] Source-k [2] Target-ek
         public static Dictionary<int, Dictionary<List<int>, List<int>>> blockList = new Dictionary<int, Dictionary<List<int>, List<int>>>();
+        public static List<SENode> blocks = new List<SENode>();
+        public static BidirectionalGraph<SENode, SEdge> graph = new BidirectionalGraph<SENode, SEdge>();
 
 
         public static void Run ()
@@ -65,21 +68,27 @@ namespace dnlib.Examples
                             // Az adott instrukció ID-ja
                             Console.WriteLine("instr: {0}", block.Id);
                             var sourceList = new List<int>();
-                            var targetList = new List<int>();
+                            var sourceListNodes = new List<SENode>();
 
+                            var targetList = new List<int>();
+                            var targetListNodes = new List<SENode>();
 
                             // Az adott blokk forrás blokkja
                             foreach (var source in block.Sources)
                             {
                                 Console.WriteLine("Source: " + source.Id);
+                                var tempSENodeSource = new SENode(source.Id);
                                 sourceList.Add(source.Id);
+                                sourceListNodes.Add(tempSENodeSource);
                             }
 
                             // Az adott blokk cél blokkja
                             foreach (var target in block.Targets)
                             {
                                 Console.WriteLine("Target: " + target.Id);
+                                var tempSENodeTarget = new SENode(target.Id);
                                 targetList.Add(target.Id);
+                                targetListNodes.Add(tempSENodeTarget);
                             }
 
                             //Console.WriteLine("Footer: {0}", block.Footer.ToString());
@@ -91,6 +100,9 @@ namespace dnlib.Examples
                             tempDictionary.Add(sourceList, targetList);
                             blockList.Add(block.Id, tempDictionary);
 
+                            var tempSENode = new SENode(block.Id, sourceListNodes, targetListNodes);
+                            blocks.Add(tempSENode);
+
                         }
 
 
@@ -101,6 +113,25 @@ namespace dnlib.Examples
                 }
 
 
+            }
+
+
+            foreach (var item in blocks)
+            {
+                Console.WriteLine("ID: " + item.Id);
+
+                Console.WriteLine("SOURCES: ");
+                foreach (var item2 in item.Source)
+                {
+                    Console.WriteLine(item2.Id);
+                }
+
+                Console.WriteLine("TARGETS: ");
+                foreach (var item2 in item.Target)
+                {
+                    Console.WriteLine(item2.Id);
+                }
+                Console.WriteLine();
             }
 
             //////foreach (var blockListItem in blockList)

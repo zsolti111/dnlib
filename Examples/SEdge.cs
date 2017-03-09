@@ -3,9 +3,9 @@ using System;
 using System.ComponentModel;
 
 
-namespace SEViz.Common.Model
+namespace dnlib.Examples
 {
-    public class SEEdge
+    public class SEdge : IEdge<SENode>
     {
 
         public int Id
@@ -13,15 +13,30 @@ namespace SEViz.Common.Model
             get; set;
         }
 
+        public SENode Source
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
 
-        public SEEdge ( int id, SENode source, SENode target )
+        public SENode Target
+        {
+            get
+            {
+                throw new NotImplementedException();
+            }
+        }
+
+        public SEdge ( int id, SENode source, SENode target )
         {
             Id = id;
         }
 
-        public static SEEdge Factory ( SENode source, SENode target, string id )
+        public static SEdge Factory ( SENode source, SENode target, string id )
         {
-            return new SEEdge(Int32.Parse(id), source, target);
+            return new SEdge(Int32.Parse(id), source, target);
         }
 
     }
