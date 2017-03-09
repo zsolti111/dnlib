@@ -20,6 +20,7 @@ namespace dnlib.Examples
         public static BidirectionalGraph<SENode, SEdge> graph = new BidirectionalGraph<SENode, SEdge>();
 
 
+
         public static void Run ()
         {
 
@@ -73,9 +74,19 @@ namespace dnlib.Examples
                             var targetList = new List<int>();
                             var targetListNodes = new List<SENode>();
 
+                            if (block.Sources.Count == 0)
+                            {
+                                if (block.Targets.Count == 0)
+                                {
+
+                                }
+                            }
+
                             // Az adott blokk forrás blokkja
+
                             foreach (var source in block.Sources)
                             {
+
                                 Console.WriteLine("Source: " + source.Id);
                                 var tempSENodeSource = new SENode(source.Id);
                                 sourceList.Add(source.Id);
@@ -118,7 +129,9 @@ namespace dnlib.Examples
 
             foreach (var item in blocks)
             {
+
                 Console.WriteLine("ID: " + item.Id);
+
 
                 Console.WriteLine("SOURCES: ");
                 foreach (var item2 in item.Source)
