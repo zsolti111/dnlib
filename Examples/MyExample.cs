@@ -12,31 +12,26 @@ namespace dnlib.Examples
 {
     public class MyExample
     {
+        // Letároluk az adott Node ID-jához tartozó Source, és Targeteket
+        public static Dictionary<int, Dictionary<List<SENode>, List<SENode>>> nodeContainer = new Dictionary<int, Dictionary<List<SENode>, List<SENode>>>();
 
-        // Key: ID
-        // Value : [1] Source-k [2] Target-ek
-        // public static Dictionary<int, Dictionary<List<int>, List<int>>> blockList = new Dictionary<int, Dictionary<List<int>, List<int>>>();
-
-
+        // Lista melyben a cúcsokat tároljuk
         public static List<SENode> blocks = new List<SENode>();
+        // gráf
         public static BidirectionalGraph<SENode, SEdge> graph = new BidirectionalGraph<SENode, SEdge>();
+
+        public static int edgeId = 0;
 
 
 
         public static void Run ()
         {
 
-            /* Saját dll-t készítettem, a filename a path és egy ModuleDefMD típusú objektumba ezt betöltöm*/
 
             string filename = @"C:\Users\Zsolti\Desktop\önlab\MClassLibrary2\MyClassLibrary2\MyClassLibrary2\bin\Debug\MyClassLibrary2.dll";
 
-            /* Algorithms vizsgálata */
-            //string filename = @"C:\Users\Zsolti\Desktop\C-Sharp-Algorithms-master\C-Sharp-Algorithms-master\Algorithms\bin\Debug\Algorithms.dll";
-            /* DataStructures vizsgálata */
-            //string filename = @"C:\Users\Zsolti\Desktop\C-Sharp-Algorithms-master\C-Sharp-Algorithms-master\DataStructures\bin\Debug\DataStrcutres.dll";
 
             ModuleDefMD mod = ModuleDefMD.Load(filename);
-
 
 
 
@@ -56,21 +51,23 @@ namespace dnlib.Examples
                     {
                         Console.WriteLine();
                         Console.WriteLine("Method Name: {0}", method.Name);
-                        //Console.WriteLine("Method Parameters: {0}", method.Parameters);
 
-                        // A függvényből megcsináljuk a CFG-t
                         ControlFlowGraph graph = ControlFlowGraph.Construct(method.Body);
 
                         Console.WriteLine("==============================");
+
+                        //-------------------------------------
+                        //-------------------------------------
+                        //-------------------------------------
+                        //-------------------------------------
 
                         foreach (var block in graph.GetAllBlocks())
                         {
                             // Az adott instrukció ID-ja
                             Console.WriteLine("instr: {0}", block.Id);
-                            var sourceList = new List<int>();
-                            var sourceListNodes = new List<SENode>();
+                            blocks.Add(new SENode(block.Id));
 
-                            var targetList = new List<int>();
+                            var sourceListNodes = new List<SENode>();
                             var targetListNodes = new List<SENode>();
 
 
@@ -81,7 +78,6 @@ namespace dnlib.Examples
 
                                 Console.WriteLine("Source: " + source.Id);
                                 var tempSENodeSource = new SENode(source.Id);
-                                sourceList.Add(source.Id);
                                 sourceListNodes.Add(tempSENodeSource);
                             }
 
@@ -90,23 +86,27 @@ namespace dnlib.Examples
                             {
                                 Console.WriteLine("Target: " + target.Id);
                                 var tempSENodeTarget = new SENode(target.Id);
-                                targetList.Add(target.Id);
                                 targetListNodes.Add(tempSENodeTarget);
                             }
 
-                            //Console.WriteLine("Footer: {0}", block.Footer.ToString());
-                            //Console.WriteLine("Header: {0}", block.Header.ToString());
 
                             Console.WriteLine();
 
-                            var tempDictionary = new Dictionary<List<int>, List<int>>();
-                            tempDictionary.Add(sourceList, targetList);
-                            ////////////////blockList.Add(block.Id, tempDictionary);
+                            var tempDictionary = new Dictionary<List<SENode>, List<SENode>>();
+                            tempDictionary.Add(sourceListNodes, targetListNodes);
+                            nodeContainer.Add(block.Id, tempDictionary);
 
-                            var tempSENode = new SENode(block.Id, sourceListNodes, targetListNodes);
-                            blocks.Add(tempSENode);
+
+
+
 
                         }
+
+                        //-------------------------------------
+                        //-------------------------------------
+                        //-------------------------------------
+                        //-------------------------------------
+
 
 
 
@@ -119,75 +119,92 @@ namespace dnlib.Examples
             }
 
 
-            foreach (var item in blocks)
-            {
-
-                //if (item.Source.Count == 0)
-                //{
-                //    var tempEdge = new SEdge(item.Id, item., item.Target);
-                //    graph.AddEdge(tempEdge);
-
-                //}
-
-                //if (item.Target.Count == 0)
-                //{
-                //    var tempEdge = new SEdge(item.Id, null, item.Target);
-                //    graph.AddEdge(tempEdge);
-
-                //}
-
-                graph.AddVertex(item);
-
-
-                Console.WriteLine("ID: " + "\n" + item.Id);
-
-
-                Console.WriteLine("SOURCES: ");
-                foreach (var item2 in item.Source)
-                {
-                    Console.WriteLine(item2.Id);
-                }
-
-                Console.WriteLine("TARGETS: ");
-                foreach (var item2 in item.Target)
-                {
-                    Console.WriteLine(item2.Id);
-                }
-                Console.WriteLine();
-                Console.WriteLine("----------------------------");
-            }
 
 
             for (int i = 0; i < 5; i++)
             {
                 Console.WriteLine();
             }
+            //----------------------------------
+            //----------------------------------
+            //    MEGNÉZZÜK JÓ-E A CONTAINER
+            //----------------------------------
+            //----------------------------------
+            Console.WriteLine("NODE CONTAINER");
+            foreach (var node in nodeContainer)
+            {
+                Console.WriteLine("ID: ");
+                Console.WriteLine(node.Key);
 
-            Console.WriteLine("----GRAPH----");
+                foreach (var node2 in node.Value)
+                {
+                    Console.WriteLine("SOURCE:");
+                    foreach (var item in node2.Key)
+                    {
+                        Console.WriteLine(item.Id);
+                    }
 
-            Console.WriteLine(graph.VertexCount);
 
-            //////foreach (var blockListItem in blockList)
-            //////{
-            //////    Console.WriteLine("ID:" + blockListItem.Key);
+                    Console.WriteLine("TARGET:");
+                    foreach (var item in node2.Value)
+                    {
+                        Console.WriteLine(item.Id);
+                    }
+                }
+                Console.WriteLine();
+            }
 
-            //////    foreach (var dictionaryItem in blockListItem.Value)
-            //////    {
-            //////        Console.WriteLine("Source: ");
-            //////        foreach (var source in dictionaryItem.Key)
-            //////        {
-            //////            Console.WriteLine(source);
-            //////        }
+            for (int i = 0; i < 5; i++)
+            {
+                Console.WriteLine();
+            }
 
-            //////        Console.WriteLine("Target: ");
-            //////        foreach (var target in dictionaryItem.Value)
-            //////        {
-            //////            Console.WriteLine(target);
-            //////        }
-            //////    }
+            // A gráfhoz hozzáadjuk a csúcsokat
+            foreach (var item in blocks)
+            {
+                graph.AddVertex(item);
+            }
 
-            //////    Console.WriteLine();
-            //////}
+
+
+
+            // a gráfhoz hozzáadjuk az éleket
+
+
+
+            foreach (var node in nodeContainer)
+            {
+                foreach (var block in blocks)
+                {
+                    if (node.Key == block.Id)
+                    {
+                        foreach (var node2 in node.Value)
+                        {
+
+                            // SOURCES
+                            foreach (var item in node2.Key)
+                            {
+                                graph.AddEdge(new SEdge(edgeId, block, item));
+                                edgeId++;
+                            }
+
+
+                            // TARGETS
+                            foreach (var item in node2.Value)
+                            {
+                                graph.AddEdge(new SEdge(edgeId, block, item));
+                                edgeId++;
+                            }
+                        }
+                    }
+                }
+            }
+
+            Console.WriteLine("EDGES: " + graph.EdgeCount);
+            Console.WriteLine("NODES: " + graph.VertexCount);
+
+
+
 
         }
     }
