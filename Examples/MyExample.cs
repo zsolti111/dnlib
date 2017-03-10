@@ -180,15 +180,6 @@ namespace dnlib.Examples
                     {
                         foreach (var node2 in node.Value)
                         {
-
-                            // SOURCES
-                            foreach (var item in node2.Key)
-                            {
-                                graph.AddEdge(new SEdge(edgeId, block, item));
-                                edgeId++;
-                            }
-
-
                             // TARGETS
                             foreach (var item in node2.Value)
                             {
@@ -202,6 +193,7 @@ namespace dnlib.Examples
 
             Console.WriteLine("EDGES: " + graph.EdgeCount);
             Console.WriteLine("NODES: " + graph.VertexCount);
+            Console.WriteLine("EDGEEES:" + edgeId);
 
 
 
