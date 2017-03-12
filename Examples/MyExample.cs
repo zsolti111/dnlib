@@ -12,13 +12,15 @@ namespace dnlib.Examples
 {
     public class MyExample
     {
-        // Letároluk az adott Node ID-jához tartozó Source, és Targeteket
-        public static Dictionary<int, Dictionary<List<SENode>, List<SENode>>> nodeContainer = new Dictionary<int, Dictionary<List<SENode>, List<SENode>>>();
+
 
         // Lista melyben a cúcsokat tároljuk
-        public static List<SENode> blocks = new List<SENode>();
+        public static List<CFGNode> nodes = new List<CFGNode>();
+
+        // Lista melyben az éleket tároljuk
+        public static List<CFGEdge> edges = new List<CFGEdge>();
         // gráf
-        public static BidirectionalGraph<SENode, SEdge> graph = new BidirectionalGraph<SENode, SEdge>();
+        public static BidirectionalGraph<CFGNode, CFGEdge> graph = new BidirectionalGraph<CFGNode, CFGEdge>();
 
         public static int edgeId = 0;
 
@@ -65,10 +67,9 @@ namespace dnlib.Examples
                         {
                             // Az adott instrukció ID-ja
                             Console.WriteLine("instr: {0}", block.Id);
-                            blocks.Add(new SENode(block.Id));
+                            var tempNode = new CFGNode(block.Id);
+                            nodes.Add(tempNode);
 
-                            var sourceListNodes = new List<SENode>();
-                            var targetListNodes = new List<SENode>();
 
 
                             // Az adott blokk forrás blokkja
@@ -77,25 +78,24 @@ namespace dnlib.Examples
                             {
 
                                 Console.WriteLine("Source: " + source.Id);
-                                var tempSENodeSource = new SENode(source.Id);
-                                sourceListNodes.Add(tempSENodeSource);
+
+
                             }
 
                             // Az adott blokk cél blokkja
+                            // itt hozunk létre élt 
                             foreach (var target in block.Targets)
                             {
                                 Console.WriteLine("Target: " + target.Id);
-                                var tempSENodeTarget = new SENode(target.Id);
-                                targetListNodes.Add(tempSENodeTarget);
+                                var tempTarget = new CFGNode(target.Id);
+
+                                var tempEdge = new CFGEdge(edgeId, tempNode, tempTarget);
+                                edges.Add(tempEdge);
+
                             }
 
 
                             Console.WriteLine();
-
-                            var tempDictionary = new Dictionary<List<SENode>, List<SENode>>();
-                            tempDictionary.Add(sourceListNodes, targetListNodes);
-                            nodeContainer.Add(block.Id, tempDictionary);
-
 
 
 
@@ -125,45 +125,14 @@ namespace dnlib.Examples
             {
                 Console.WriteLine();
             }
-            //----------------------------------
-            //----------------------------------
-            //    MEGNÉZZÜK JÓ-E A CONTAINER
-            //----------------------------------
-            //----------------------------------
-            Console.WriteLine("NODE CONTAINER");
-            foreach (var node in nodeContainer)
-            {
-                Console.WriteLine("ID: ");
-                Console.WriteLine(node.Key);
-
-                foreach (var node2 in node.Value)
-                {
-                    Console.WriteLine("SOURCE:");
-                    foreach (var item in node2.Key)
-                    {
-                        Console.WriteLine(item.Id);
-                    }
 
 
-                    Console.WriteLine("TARGET:");
-                    foreach (var item in node2.Value)
-                    {
-                        Console.WriteLine(item.Id);
-                    }
-                }
-                Console.WriteLine();
-            }
 
-            for (int i = 0; i < 5; i++)
-            {
-                Console.WriteLine();
-            }
 
             // A gráfhoz hozzáadjuk a csúcsokat
-            foreach (var item in blocks)
-            {
-                graph.AddVertex(item);
-            }
+            graph.AddVertexRange(nodes);
+            graph.AddEdgeRange(edges);
+
 
 
 
@@ -172,28 +141,9 @@ namespace dnlib.Examples
 
 
 
-            foreach (var node in nodeContainer)
-            {
-                foreach (var block in blocks)
-                {
-                    if (node.Key == block.Id)
-                    {
-                        foreach (var node2 in node.Value)
-                        {
-                            // TARGETS
-                            foreach (var item in node2.Value)
-                            {
-                                graph.AddEdge(new SEdge(edgeId, block, item));
-                                edgeId++;
-                            }
-                        }
-                    }
-                }
-            }
-
             Console.WriteLine("EDGES: " + graph.EdgeCount);
             Console.WriteLine("NODES: " + graph.VertexCount);
-            Console.WriteLine("EDGEEES:" + edgeId);
+
 
 
 

@@ -6,7 +6,7 @@ using System.ComponentModel;
 
 namespace dnlib.Examples
 {
-    public class SEdge : Edge<SENode>
+    public class CFGEdge : Edge<CFGNode>
     {
 
         public int Id
@@ -15,7 +15,7 @@ namespace dnlib.Examples
         }
 
 
-        public SEdge ( int id, SENode source, SENode target ) : base(source, target)
+        public CFGEdge ( int id, CFGNode source, CFGNode target ) : base(source, target)
         {
             Id = id;
 

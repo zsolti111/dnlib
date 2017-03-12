@@ -5,7 +5,7 @@ using System.ComponentModel;
 
 namespace dnlib.Examples
 {
-    public class SENode
+    public class CFGNode
     {
 
 
@@ -16,7 +16,7 @@ namespace dnlib.Examples
 
      
 
-        public SENode ( int id )
+        public CFGNode ( int id )
         {
             Id = id;
         }
