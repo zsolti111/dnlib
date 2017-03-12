@@ -63,12 +63,17 @@ namespace dnlib.Examples
                         //-------------------------------------
                         //-------------------------------------
 
+                        // Először feltöltjük a csúcsokat
+                        foreach (var block in graph.GetAllBlocks())
+                        {
+                            nodes.Add(new CFGNode(block.Id));
+                        }
+
+                        // Kiíratás + élek feltöltése
                         foreach (var block in graph.GetAllBlocks())
                         {
                             // Az adott instrukció ID-ja
                             Console.WriteLine("instr: {0}", block.Id);
-                            var tempNode = new CFGNode(block.Id);
-                            nodes.Add(tempNode);
 
 
 
@@ -76,10 +81,7 @@ namespace dnlib.Examples
 
                             foreach (var source in block.Sources)
                             {
-
                                 Console.WriteLine("Source: " + source.Id);
-
-
                             }
 
                             // Az adott blokk cél blokkja
@@ -87,18 +89,12 @@ namespace dnlib.Examples
                             foreach (var target in block.Targets)
                             {
                                 Console.WriteLine("Target: " + target.Id);
-                                var tempTarget = new CFGNode(target.Id);
-
-                                var tempEdge = new CFGEdge(edgeId, tempNode, tempTarget);
+                                var tempEdge = new CFGEdge(edgeId, nodes.Where(x => x.Id == block.Id).FirstOrDefault(), nodes.Where(x => x.Id == target.Id).FirstOrDefault());
+                                edgeId++;
                                 edges.Add(tempEdge);
-
                             }
 
-
                             Console.WriteLine();
-
-
-
 
                         }
 
