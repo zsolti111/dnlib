@@ -1,12 +1,14 @@
 ﻿using dnlib.DotNet;
 using dnlib.DotNet.Emit;
 using QuickGraph;
+using QuickGraph.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace dnlib.Examples
 {
@@ -26,6 +28,15 @@ namespace dnlib.Examples
 
 
 
+        public static void Serialize ( BidirectionalGraph<CFGNode, CFGEdge> graph, string path )
+        {
+
+            var ser = new GraphMLSerializer<CFGNode, CFGEdge, BidirectionalGraph<CFGNode, CFGEdge>>();
+            using (var writer = XmlWriter.Create(path + "temp.graphml", new XmlWriterSettings { Indent = true, WriteEndDocumentOnClose = false }))
+            {
+                ser.Serialize(writer, graph, v => v.Id.ToString(), e => e.Id.ToString());
+            }
+        }
         public static void Run ()
         {
 
@@ -128,6 +139,8 @@ namespace dnlib.Examples
             // A gráfhoz hozzáadjuk a csúcsokat
             graph.AddVertexRange(nodes);
             graph.AddEdgeRange(edges);
+            var temppath = @"C:\Users\Zsolti\Desktop\önlab";
+            Serialize(graph, temppath);
 
 
 
