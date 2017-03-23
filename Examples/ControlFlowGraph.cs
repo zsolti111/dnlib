@@ -13,7 +13,7 @@ namespace dnlib.Examples
     {
         readonly List<ControlFlowBlock> blocks;
         readonly CilBody body;
-        readonly int[] instrBlocks;
+        readonly int [] instrBlocks;
         readonly Dictionary<Instruction, int> indexMap;
 
         ControlFlowGraph ( CilBody body )
@@ -21,12 +21,12 @@ namespace dnlib.Examples
             try
             {
                 this.body = body;
-                instrBlocks = new int[body.Instructions.Count];
+                instrBlocks = new int [body.Instructions.Count];
                 blocks = new List<ControlFlowBlock>();
 
                 indexMap = new Dictionary<Instruction, int>();
                 for (int i = 0; i < body.Instructions.Count; i++)
-                    indexMap.Add(body.Instructions[i], i);
+                    indexMap.Add(body.Instructions [i], i);
             }
 
             catch
@@ -53,11 +53,11 @@ namespace dnlib.Examples
         /// </summary>
         /// <param name="id">The id.</param>
         /// <returns>The block with specified id.</returns>
-        public ControlFlowBlock this[int id]
+        public ControlFlowBlock this [int id]
         {
             get
             {
-                return blocks[id];
+                return blocks [id];
             }
         }
 
@@ -90,7 +90,7 @@ namespace dnlib.Examples
         /// <returns>The block containing the instruction.</returns>
         public ControlFlowBlock GetContainingBlock ( int instrIndex )
         {
-            return blocks[instrBlocks[instrIndex]];
+            return blocks [instrBlocks [instrIndex]];
         }
 
 
@@ -112,35 +112,35 @@ namespace dnlib.Examples
         /// <returns>The index of instruction.</returns>
         public int IndexOf ( Instruction instr )
         {
-            return indexMap[instr];
+            return indexMap [instr];
         }
 
         void PopulateBlockHeaders ( HashSet<Instruction> blockHeaders, HashSet<Instruction> entryHeaders )
         {
             for (int i = 0; i < body.Instructions.Count; i++)
             {
-                Instruction instr = body.Instructions[i];
+                Instruction instr = body.Instructions [i];
 
                 if (instr.Operand is Instruction)
                 {
                     blockHeaders.Add((Instruction)instr.Operand);
                     if (i + 1 < body.Instructions.Count)
-                        blockHeaders.Add(body.Instructions[i + 1]);
+                        blockHeaders.Add(body.Instructions [i + 1]);
                 }
-                else if (instr.Operand is Instruction[])
+                else if (instr.Operand is Instruction [])
                 {
-                    foreach (Instruction target in (Instruction[])instr.Operand)
+                    foreach (Instruction target in (Instruction [])instr.Operand)
                         blockHeaders.Add(target);
                     if (i + 1 < body.Instructions.Count)
-                        blockHeaders.Add(body.Instructions[i + 1]);
+                        blockHeaders.Add(body.Instructions [i + 1]);
                 }
                 else if (( instr.OpCode.FlowControl == FlowControl.Throw || instr.OpCode.FlowControl == FlowControl.Return ) &&
                          i + 1 < body.Instructions.Count)
                 {
-                    blockHeaders.Add(body.Instructions[i + 1]);
+                    blockHeaders.Add(body.Instructions [i + 1]);
                 }
             }
-            blockHeaders.Add(body.Instructions[0]);
+            blockHeaders.Add(body.Instructions [0]);
             foreach (ExceptionHandler eh in body.ExceptionHandlers)
             {
                 blockHeaders.Add(eh.TryStart);
@@ -159,15 +159,15 @@ namespace dnlib.Examples
 
             for (int i = 0; i < body.Instructions.Count; i++)
             {
-                Instruction instr = body.Instructions[i];
+                Instruction instr = body.Instructions [i];
                 if (blockHeaders.Contains(instr))
                 {
                     if (currentBlockHdr != null)
                     {
-                        Instruction footer = body.Instructions[i - 1];
+                        Instruction footer = body.Instructions [i - 1];
 
                         var type = ControlFlowBlockType.Normal;
-                        if (entryHeaders.Contains(currentBlockHdr) || currentBlockHdr == body.Instructions[0])
+                        if (entryHeaders.Contains(currentBlockHdr) || currentBlockHdr == body.Instructions [0])
                             type |= ControlFlowBlockType.Entry;
                         if (footer.OpCode.FlowControl == FlowControl.Return || footer.OpCode.FlowControl == FlowControl.Throw)
                             type |= ControlFlowBlockType.Exit;
@@ -179,14 +179,14 @@ namespace dnlib.Examples
                     currentBlockHdr = instr;
                 }
 
-                instrBlocks[i] = currentBlockId;
+                instrBlocks [i] = currentBlockId;
             }
-            if (blocks.Count == 0 || blocks[blocks.Count - 1].Id != currentBlockId)
+            if (blocks.Count == 0 || blocks [blocks.Count - 1].Id != currentBlockId)
             {
-                Instruction footer = body.Instructions[body.Instructions.Count - 1];
+                Instruction footer = body.Instructions [body.Instructions.Count - 1];
 
                 var type = ControlFlowBlockType.Normal;
-                if (entryHeaders.Contains(currentBlockHdr) || currentBlockHdr == body.Instructions[0])
+                if (entryHeaders.Contains(currentBlockHdr) || currentBlockHdr == body.Instructions [0])
                     type |= ControlFlowBlockType.Entry;
                 if (footer.OpCode.FlowControl == FlowControl.Return || footer.OpCode.FlowControl == FlowControl.Throw)
                     type |= ControlFlowBlockType.Exit;
@@ -199,20 +199,20 @@ namespace dnlib.Examples
         {
             for (int i = 0; i < body.Instructions.Count; i++)
             {
-                Instruction instr = body.Instructions[i];
+                Instruction instr = body.Instructions [i];
                 if (instr.Operand is Instruction)
                 {
-                    ControlFlowBlock srcBlock = blocks[instrBlocks[i]];
-                    ControlFlowBlock dstBlock = blocks[instrBlocks[indexMap[(Instruction)instr.Operand]]];
+                    ControlFlowBlock srcBlock = blocks [instrBlocks [i]];
+                    ControlFlowBlock dstBlock = blocks [instrBlocks [indexMap [(Instruction)instr.Operand]]];
                     dstBlock.Sources.Add(srcBlock);
                     srcBlock.Targets.Add(dstBlock);
                 }
-                else if (instr.Operand is Instruction[])
+                else if (instr.Operand is Instruction [])
                 {
-                    foreach (Instruction target in (Instruction[])instr.Operand)
+                    foreach (Instruction target in (Instruction [])instr.Operand)
                     {
-                        ControlFlowBlock srcBlock = blocks[instrBlocks[i]];
-                        ControlFlowBlock dstBlock = blocks[instrBlocks[indexMap[target]]];
+                        ControlFlowBlock srcBlock = blocks [instrBlocks [i]];
+                        ControlFlowBlock dstBlock = blocks [instrBlocks [indexMap [target]]];
                         dstBlock.Sources.Add(srcBlock);
                         srcBlock.Targets.Add(dstBlock);
                     }
@@ -220,12 +220,12 @@ namespace dnlib.Examples
             }
             for (int i = 0; i < blocks.Count; i++)
             {
-                if (blocks[i].Footer.OpCode.FlowControl != FlowControl.Branch &&
-                    blocks[i].Footer.OpCode.FlowControl != FlowControl.Return &&
-                    blocks[i].Footer.OpCode.FlowControl != FlowControl.Throw)
+                if (blocks [i].Footer.OpCode.FlowControl != FlowControl.Branch &&
+                    blocks [i].Footer.OpCode.FlowControl != FlowControl.Return &&
+                    blocks [i].Footer.OpCode.FlowControl != FlowControl.Throw)
                 {
-                    blocks[i].Targets.Add(blocks[i + 1]);
-                    blocks[i + 1].Sources.Add(blocks[i]);
+                    blocks [i].Targets.Add(blocks [i + 1]);
+                    blocks [i + 1].Sources.Add(blocks [i]);
                 }
             }
         }

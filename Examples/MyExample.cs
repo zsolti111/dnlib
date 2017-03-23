@@ -27,6 +27,25 @@ namespace dnlib.Examples
         public static int edgeId = 0;
 
 
+        //////private static void ReplaceLineBreaks ( BidirectionalGraph<CFGNode, CFGEdge> graph, bool serialize )
+        //////{
+        //////    if (serialize)
+        //////    {
+        //////        foreach (var v in graph.Vertices)
+        //////        {
+        //////            v.PathCondition = v.PathCondition.Replace(Environment.NewLine, "[LB]");
+        //////            v.IncrementalPathCondition = v.IncrementalPathCondition.Replace(Environment.NewLine, "[LB]");
+        //////        }
+        //////    }
+        //////    else
+        //////    {
+        //////        foreach (var v in graph.Vertices)
+        //////        {
+        //////            v.PathCondition = v.PathCondition.Replace("[LB]", Environment.NewLine);
+        //////            v.IncrementalPathCondition = v.IncrementalPathCondition.Replace("[LB]", Environment.NewLine);
+        //////        }
+        //////    }
+        //////}
 
         public static void Serialize ( BidirectionalGraph<CFGNode, CFGEdge> graph, string path )
         {
@@ -37,6 +56,9 @@ namespace dnlib.Examples
                 ser.Serialize(writer, graph, v => v.Id.ToString(), e => e.Id.ToString());
             }
         }
+
+
+
         public static void Run ()
         {
 
@@ -75,6 +97,8 @@ namespace dnlib.Examples
                         //-------------------------------------
 
                         // Először feltöltjük a csúcsokat
+                        // propertyk tárolása footer, header type
+
                         foreach (var block in graph.GetAllBlocks())
                         {
                             nodes.Add(new CFGNode(block.Id));
